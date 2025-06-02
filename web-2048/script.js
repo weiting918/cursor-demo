@@ -3,9 +3,11 @@ class Game2048 {
         this.gridSize = 4;
         this.grid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(0));
         this.score = 0;
+        this.moves = 0;
         this.bestScore = parseInt(localStorage.getItem('bestScore')) || 0;
         this.gameContainer = document.querySelector('.grid-container');
         this.scoreDisplay = document.getElementById('score');
+        this.movesDisplay = document.getElementById('moves');
         this.bestScoreDisplay = document.getElementById('best-score');
         this.soundEffects = new SoundEffects();
         this.init();
@@ -88,7 +90,9 @@ class Game2048 {
         // Clear the grid
         this.grid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(0));
         this.score = 0;
+        this.moves = 0;
         this.updateScore();
+        this.updateMoves();
         
         // Create grid cells
         this.gameContainer.innerHTML = '';
@@ -102,6 +106,10 @@ class Game2048 {
         this.addNewTile();
         this.addNewTile();
         this.updateGrid();
+    }
+
+    updateMoves() {
+        this.movesDisplay.textContent = this.moves;
     }
 
     addNewTile() {
@@ -125,10 +133,14 @@ class Game2048 {
         const existingTiles = document.querySelectorAll('.tile');
         existingTiles.forEach(tile => tile.remove());
 
-        // Calculate tile size
-        const containerWidth = 450;
-        const gap = 15;
-        const tileSize = (containerWidth - (5 * gap)) / 4;
+        // Get container dimensions
+        const container = this.gameContainer;
+        const containerPadding = 16;
+        const gridGap = 16;
+        
+        // Calculate tile size based on container width
+        const availableSpace = container.clientWidth - (containerPadding * 2);
+        const tileSize = Math.floor((availableSpace - (gridGap * 3)) / 4);
 
         // Create new tiles
         for (let i = 0; i < this.gridSize; i++) {
@@ -138,9 +150,20 @@ class Game2048 {
                     tile.classList.add('tile');
                     tile.setAttribute('data-value', this.grid[i][j]);
                     tile.textContent = this.grid[i][j];
-                    tile.style.left = (j * (tileSize + gap) + gap) + 'px';
-                    tile.style.top = (i * (tileSize + gap) + gap) + 'px';
-                    this.gameContainer.appendChild(tile);
+                    
+                    // Calculate position with precise offsets
+                    const left = Math.round(containerPadding + (j * (tileSize + gridGap)));
+                    const top = Math.round(containerPadding + (i * (tileSize + gridGap)));
+                    
+                    // Apply position and size
+                    Object.assign(tile.style, {
+                        width: `${tileSize}px`,
+                        height: `${tileSize}px`,
+                        left: `${left}px`,
+                        top: `${top}px`
+                    });
+                    
+                    container.appendChild(tile);
                 }
             }
         }
@@ -204,6 +227,8 @@ class Game2048 {
 
         if (JSON.stringify(this.grid) !== originalGrid) {
             moved = true;
+            this.moves++;
+            this.updateMoves();
             this.addNewTile();
             // 播放合并音效
             if (mergeHappened) {
