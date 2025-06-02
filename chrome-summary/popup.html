@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Web Page Summarizer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      width: 400px;
+      min-height: 300px;
+      margin: 0;
+      padding: 16px;
+      font-family: 'Inter', sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    #summarizeBtn {
+      background-color: #007bff;
+      color: white;
+    }
+
+    #summarizeBtn:hover {
+      background-color: #0056b3;
+    }
+
+    #settingsBtn {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    #settingsBtn:hover {
+      background-color: #545b62;
+    }
+
+    #clearBtn {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    #clearBtn:hover {
+      background-color: #c82333;
+    }
+
+    .content {
+      background-color: white;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .summary-section {
+      margin-bottom: 16px;
+    }
+
+    .summary-section h3 {
+      margin: 0 0 8px 0;
+      color: #212529;
+      font-size: 16px;
+    }
+
+    .summary-content {
+      color: #495057;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .key-facts ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .key-facts li {
+      margin-bottom: 4px;
+    }
+
+    .loading {
+      text-align: center;
+      color: #6c757d;
+      padding: 20px;
+      display: none;
+    }
+
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #007bff;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="button-group">
+      <button id="summarizeBtn">Summarize</button>
+      <button id="settingsBtn">Settings</button>
+      <button id="clearBtn">Clear</button>
+    </div>
+  </div>
+
+  <div class="loading">
+    <div class="spinner"></div>
+    <p>Summarizing content...</p>
+  </div>
+
+  <div class="content">
+    <div class="summary-section">
+      <h3>Summary</h3>
+      <div id="summaryContent" class="summary-content">
+        Click "Summarize" to generate a summary of the current page.
+      </div>
+    </div>
+    
+    <div class="summary-section key-facts">
+      <h3>Key Facts</h3>
+      <div id="keyFactsContent" class="summary-content">
+        <ul id="keyFactsList">
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html> 
